@@ -18,7 +18,7 @@ class Model2 extends BaseModel {
 	public String e;
 }
 
-class BaseModelTest {
+class TestBaseModel {
 	@Test
 	void testCompareToSmaller() {
 		BaseModel entity1 = new Model1();
