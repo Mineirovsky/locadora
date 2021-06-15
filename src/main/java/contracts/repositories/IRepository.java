@@ -1,15 +1,14 @@
-package contracts;
+package contracts.repositories;
 
 import java.util.Collection;
-
-import models.BaseModel;
+import contracts.models.IModel;
 
 /**
  * @author Gabriel Mineiro <gabrielpfgmineiro@gmail.com>
  *
  * @param <T> Model of the repository
  */
-public interface IRepository<T extends BaseModel> {
+public interface IRepository<T extends IModel> {
 	/**
 	 * Get all elements in the repository
 	 *
