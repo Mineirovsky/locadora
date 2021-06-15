@@ -9,6 +9,15 @@ class Model1 extends BaseModel {
 	public int intParam;
 }
 
+class Model2 extends BaseModel {
+	public int a;
+	@SuppressWarnings("unused")
+	private int b = 0xFF;
+	int c;
+	public int d;
+	public String e;
+}
+
 class BaseModelTest {
 	@Test
 	void testCompareToSmaller() {
@@ -68,12 +77,24 @@ class BaseModelTest {
 	@Test
 	void testToCsv() {
 		Model1 entity = new Model1();
-		entity1.setId(1);
-		entity1.intParam = 0;
-		entity1.stringParam = "text";
+		entity.setId(1);
+		entity.intParam = 0;
+		entity.stringParam = "text";
 		
 		String csv = entity.toCsv();
 		assertEquals("1,0,text", csv);
 	}
 
+	@Test
+	void testToCsvWithOffendingChar() {
+		Model2 entity = new Model2();
+		entity.setId(42);
+		entity.a = 10;
+		entity.c = 20;
+		entity.d = 30;
+		entity.e = "Hey, this text is \"offensive\"";
+		
+		String csv = entity.toCsv();
+		assertEquals("42,10,30,\"Hey, this text is \"\"offensive\"\"\"", csv);
+	}
 }
