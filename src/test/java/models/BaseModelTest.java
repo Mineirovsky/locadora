@@ -4,7 +4,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-class Model1 extends BaseModel { }
+class Model1 extends BaseModel {
+	public String stringParam;
+	public int intParam;
+}
 
 class BaseModelTest {
 	@Test
@@ -61,4 +64,16 @@ class BaseModelTest {
 
 		assertFalse(entity1.equals(entity2));
 	}
+
+	@Test
+	void testToCsv() {
+		Model1 entity = new Model1();
+		entity1.setId(1);
+		entity1.intParam = 0;
+		entity1.stringParam = "text";
+		
+		String csv = entity.toCsv();
+		assertEquals("1,0,text", csv);
+	}
+
 }
