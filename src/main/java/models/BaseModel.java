@@ -7,6 +7,7 @@ import java.util.TreeMap;
 
 import contracts.csv.CsvSerializable;
 import contracts.models.IModel;
+import helpers.Csv;
 
 /**
  * @author Gabriel Mineiro <gabrielpfgmineiro@gmail.com>
@@ -68,7 +69,7 @@ public abstract class BaseModel implements IModel, Comparable<BaseModel>, CsvSer
 		while(it.hasNext()) {
 			try {
 				field = it.next().get(this).toString();
-				csv += "," + field;
+				csv += "," + Csv.escape(field);
 			} catch (IllegalArgumentException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
