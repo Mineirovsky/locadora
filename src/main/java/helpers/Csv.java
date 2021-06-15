@@ -12,4 +12,12 @@ public class Csv {
 		
 		return false;
 	}
+	
+	public static String escape(String text) {
+		if (hasOffendingChar(text)) {
+			return "\"" + text.replace("\"", "\"\"") + "\"";
+		}
+		
+		return text;
+	}
 }
