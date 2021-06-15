@@ -18,9 +18,9 @@ public abstract class BaseModel implements IModel, Comparable<BaseModel>, CsvSer
 	 * Unique identifier
 	 */
 	private int id = 0;
-	
+
 	private SortedMap<String, Field> fields;
-	
+
 	BaseModel() {
 		setupFields();
 	}
@@ -28,44 +28,43 @@ public abstract class BaseModel implements IModel, Comparable<BaseModel>, CsvSer
 	private void setupFields() {
 		Field[] fields = this.getClass().getFields();
 		this.fields = new TreeMap<String, Field>();
-		
+
 		for (Field field: fields) {
 			this.fields.put(field.getName(), field);
 		}
-		
+
 	}
-	
+
 	public int getId() {
 		return id;
 	}
-	
+
 	void setId(int id) {
 		this.id = id;
 	}
-	
+
 	public int compareTo(BaseModel o) {
 		if (id < o.id) {
 			return -1;
 		}
-		
+
 		if (id > o.id) {
 			return 1;
 		}
-		
+
 		return 0;
 	}
 
 	public boolean equals(BaseModel obj) {
-		
 		return id == obj.id;
 	}
-	
+
 	public String toCsv() {
 		String csv = "" + id;
 		String field;
 
 		Iterator<Field> it = fields.values().iterator();
-		
+
 		while(it.hasNext()) {
 			try {
 				field = it.next().get(this).toString();
@@ -76,7 +75,7 @@ public abstract class BaseModel implements IModel, Comparable<BaseModel>, CsvSer
 			} catch (IllegalAccessException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			} 
+			}
 		}
 
 		return csv;
