@@ -21,8 +21,6 @@ class TestCustomer {
 		customer.phone = "+5527999001122";
 		customer.state = "ES";
 
-		System.out.println(customer.toCsv());
-
 		assertEquals("22,\"Av. Ipiranga, 1101\",Centro,2000-01-01,Vitoria,Gabriel,Mineiro,+5527999001122,ES", customer.toCsv());
 	}
 }
