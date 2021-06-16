@@ -61,14 +61,16 @@ public abstract class BaseModel implements IModel, Comparable<BaseModel>, CsvSer
 
 	public String toCsv() {
 		String csv = "" + id;
-		String field;
+		Object field;
+		String value;
 
 		Iterator<Field> it = fields.values().iterator();
 
 		while(it.hasNext()) {
 			try {
-				field = it.next().get(this).toString();
-				csv += "," + Csv.escape(field);
+				field = it.next().get(this);
+				value = field != null ? field.toString() : "";
+				csv += "," + Csv.escape(value);
 			} catch (IllegalArgumentException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
