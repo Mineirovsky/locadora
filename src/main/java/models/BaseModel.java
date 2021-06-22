@@ -41,6 +41,10 @@ public abstract class BaseModel implements IModel, Comparable<BaseModel>, CsvSer
 	void setId(int id) {
 		this.id = id;
 	}
+	
+	final Field[] getFields() {
+		return fields;
+	};
 
 	public int compareTo(BaseModel o) {
 		if (id < o.id) {
