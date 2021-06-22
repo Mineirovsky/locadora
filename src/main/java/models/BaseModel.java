@@ -19,20 +19,20 @@ public abstract class BaseModel implements IModel, Comparable<BaseModel>, CsvSer
 	 */
 	private int id = 0;
 
-	private SortedMap<String, Field> fields;
+	private Field[] fields;
 
 	BaseModel() {
 		setupFields();
 	}
 
 	private void setupFields() {
-		Field[] fields = this.getClass().getFields();
-		this.fields = new TreeMap<String, Field>();
-
-		for (Field field: fields) {
-			this.fields.put(field.getName(), field);
+		fields = this.getClass().getFields();
+		Arrays.sort(fields, new Comparator<Field>() {
+			@Override
+			public int compare(Field o1, Field o2) {
+				return o1.getName().compareTo(o2.getName());
 		}
-
+		});
 	}
 
 	public int getId() {
