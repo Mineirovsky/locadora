@@ -1,9 +1,8 @@
 package models;
 
 import java.lang.reflect.Field;
-import java.util.Iterator;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.util.Arrays;
+import java.util.Comparator;
 
 import contracts.csv.CsvSerializable;
 import contracts.models.IModel;
@@ -31,7 +30,7 @@ public abstract class BaseModel implements IModel, Comparable<BaseModel>, CsvSer
 			@Override
 			public int compare(Field o1, Field o2) {
 				return o1.getName().compareTo(o2.getName());
-		}
+			}
 		});
 	}
 
@@ -60,17 +59,15 @@ public abstract class BaseModel implements IModel, Comparable<BaseModel>, CsvSer
 	}
 
 	public String toCsv() {
-		String csv = "" + id;
-		Object field;
-		String value;
+		StringBuilder csv = new StringBuilder(Integer.toString(id));
+		Object value;
 
-		Iterator<Field> it = fields.values().iterator();
-
-		while(it.hasNext()) {
+		for (Field field: fields) {
 			try {
-				field = it.next().get(this);
-				value = field != null ? field.toString() : "";
-				csv += "," + Csv.escape(value);
+				value = field.get(this);
+				value = value != null ? value : "";
+				csv.append(",");
+				csv.append(Csv.escape(value.toString()));
 			} catch (IllegalArgumentException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -80,6 +77,6 @@ public abstract class BaseModel implements IModel, Comparable<BaseModel>, CsvSer
 			}
 		}
 
-		return csv;
+		return csv.toString();
 	}
 }
