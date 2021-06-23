@@ -56,4 +56,15 @@ public class ModelBuilder<T extends BaseModel> implements IModelBuilder<T> {
 
 		return fieldNames;
 	}
+
+	@Override
+	public String getFieldType(String fieldName) {
+		Field field = findField(fieldName);
+
+		if (field == null) {
+			return null;
+		}
+
+		return field.getAnnotatedType().toString();
+	}
 }
