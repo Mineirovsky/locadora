@@ -63,7 +63,7 @@ class TestCsvParser {
 			parser.parse("42,1999-12-31,\"John, the terrible\"")
 		);
 
-		assertEquals(42, setCalls.get("id"));
+		assertEquals("42", setCalls.get("id"));
 
 		assertEquals(LocalDate.of(1999, 12, 31), setCalls.get("date"));
 
