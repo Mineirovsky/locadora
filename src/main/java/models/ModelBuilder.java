@@ -41,18 +41,19 @@ public class ModelBuilder<T extends BaseModel> implements IModelBuilder<T> {
 				return field;
 			}
 		}
-		
+
 		return null;
 	}
-	
+
+	@Override
 	public final String[] getFields() {
 		Field[] fields = model.getFields();
 		String[] fieldNames = new String[fields.length];
-		
+
 		for (int i = 0; i < fields.length; i++) {
 			fieldNames[i] = fields[i].getName();
 		}
-		
+
 		return fieldNames;
 	}
 }
