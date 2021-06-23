@@ -72,12 +72,9 @@ public abstract class BaseModel implements IModel, Comparable<BaseModel>, CsvSer
 				value = value != null ? value : "";
 				csv.append(",");
 				csv.append(Csv.escape(value.toString()));
-			} catch (IllegalArgumentException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			} catch (IllegalArgumentException | IllegalAccessException e) {
+				// Something would be very broken for it to happen
+				System.exit(-1);
 			}
 		}
 
