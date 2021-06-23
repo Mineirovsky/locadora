@@ -29,7 +29,7 @@ public class CsvParser<T extends BaseModel> {
 		}
 
 		try {
-			builder.set("id", Integer.parseInt(partitions.get(0)));
+			builder.set("id", partitions.get(0));
 
 			for (int i = 0; i < fields.length; i++) {
 				String field = fields[i];
