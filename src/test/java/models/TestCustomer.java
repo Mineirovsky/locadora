@@ -7,7 +7,6 @@ import java.time.LocalDate;
 import org.junit.jupiter.api.Test;
 
 class TestCustomer {
-
 	@Test
 	void testToCsv() {
 		Customer customer = new Customer();
