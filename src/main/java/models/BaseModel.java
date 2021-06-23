@@ -20,7 +20,7 @@ public abstract class BaseModel implements IModel, Comparable<BaseModel>, CsvSer
 
 	private Field[] fields;
 
-	BaseModel() {
+	public BaseModel() {
 		setupFields();
 	}
 
