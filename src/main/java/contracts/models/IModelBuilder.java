@@ -18,4 +18,11 @@ public interface IModelBuilder<T extends IModel> {
 	 * @return List of fields names
 	 */
 	public String[] getFields();
+
+	/**
+	 * Get type name of field
+	 * @param field
+	 * @return Type name of field, null if field was not found
+	 */
+	public String getFieldType(String field);
 }
