@@ -16,7 +16,7 @@ public class ModelBuilder<T extends BaseModel> implements IModelBuilder<T> {
 		throws NoSuchFieldException, IllegalArgumentException, IllegalAccessException
 	{
 		if (fieldName.equals("id")) {
-			model.setId(Integer.getInteger(value.toString()));
+			model.setId(Integer.parseInt(value.toString()));
 		}
 
 		Field field = findField(fieldName);
