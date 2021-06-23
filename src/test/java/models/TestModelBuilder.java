@@ -57,4 +57,16 @@ class TestModelBuilder {
 			() -> builder.set("number", "Illegal")
 		);
 	}
+	
+	@Test
+	void testGetFieldType() {
+		assertEquals("int", builder.getFieldType("number"));
+		assertEquals("java.lang.String", builder.getFieldType("name"));
+		assertEquals("java.time.LocalDate", builder.getFieldType("date"));
+	}
+	
+	@Test
+	void testGetFieldTypeWithInvalidField() {
+		assertNull(builder.getFieldType("oops"));
+	}
 }
