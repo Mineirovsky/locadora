@@ -44,7 +44,7 @@ public abstract class BaseModel implements IModel, Comparable<BaseModel>, CsvSer
 	
 	final Field[] getFields() {
 		return fields;
-	};
+	}
 
 	public int compareTo(BaseModel o) {
 		if (id < o.id) {
