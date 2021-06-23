@@ -65,6 +65,6 @@ public class ModelBuilder<T extends BaseModel> implements IModelBuilder<T> {
 			return null;
 		}
 
-		return field.getAnnotatedType().toString();
+		return field.getType().getName();
 	}
 }
