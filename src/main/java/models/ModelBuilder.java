@@ -12,7 +12,7 @@ public class ModelBuilder<T extends BaseModel> implements IModelBuilder<T> {
 	}
 
 	@Override
-	public IModelBuilder<T> set(String fieldName, Object value)
+	public ModelBuilder<T> set(String fieldName, Object value)
 		throws NoSuchFieldException, IllegalArgumentException, IllegalAccessException
 	{
 		if (fieldName.equals("id")) {
