@@ -11,6 +11,11 @@ public interface IModelBuilder<T extends IModel> {
 	 * @throws IllegalArgumentException
 	 */
 	public IModelBuilder<T> set (String field, Object value) throws NoSuchFieldException, IllegalArgumentException, IllegalAccessException;
+
+	/**
+	 * Build the model instance
+	 * @return Created model instance
+	 */
 	public T build();
 
 	/**
