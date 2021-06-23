@@ -12,4 +12,10 @@ public interface IModelBuilder<T extends IModel> {
 	 */
 	public IModelBuilder<T> set (String field, Object value) throws NoSuchFieldException, IllegalArgumentException, IllegalAccessException;
 	public T build();
+
+	/**
+	 * Get the model's fields name in the preferred order 
+	 * @return List of fields names
+	 */
+	public String[] getFields();
 }
