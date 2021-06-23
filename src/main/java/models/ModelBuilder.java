@@ -15,14 +15,18 @@ public class ModelBuilder<T extends BaseModel> implements IModelBuilder<T> {
 	public IModelBuilder<T> set(String fieldName, Object value)
 		throws NoSuchFieldException, IllegalArgumentException, IllegalAccessException
 	{
-		Field field;
-		
-		if ((field = findField(fieldName)) == null) {
+		if (fieldName.equals("id")) {
+			model.setId(Integer.getInteger(value.toString()));
+		}
+
+		Field field = findField(fieldName);
+
+		if (field == null) {
 			throw new NoSuchFieldException(fieldName + " is not a member of the model " + model.getClass().getName());
 		}
-		
+
 		field.set(model, value);
-		
+
 		return this;
 	}
 
