@@ -89,6 +89,11 @@ class TestCsvParser {
 		assertEquals("\"\"", partitions.get(1));
 		assertEquals("\",\"\",,,\"\"\"", partitions.get(2));
 	}
+	
+	@Test
+	void testGetLinePartitionsWithCommaAfterInnerQuotes() {
+		List<String> partitions = CsvParser.getLinePartitions("0,\"abc\"\",de\"");
+	}
 
 	@Test
 	void testGetLinePartitionsWithOnlyCommas() {
