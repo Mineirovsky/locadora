@@ -98,7 +98,7 @@ class TestCsvParser {
 	}
 
 	@Test
-	void testGetLinePartitionsWithMimatchingCommas() {
+	void testGetLinePartitionsWithMismatchingCommas() {
 		assertThrows(
 			IllegalArgumentException.class,
 			() -> CsvParser.getLinePartitions("123\"AB\",0,,")
