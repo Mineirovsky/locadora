@@ -87,6 +87,19 @@ class TestCsvParser {
 	}
 
 	@Test
+	void testGetLinePartitionsWithMimatchingCommas() {
+		assertThrows(
+			IllegalArgumentException.class,
+			() -> CsvParser.getLinePartitions("123\"AB\",0,,")
+		);
+
+		assertThrows(
+			IllegalArgumentException.class,
+			() -> CsvParser.getLinePartitions("123,\"AB\"C,0,,")
+		);
+	}
+
+	@Test
 	void testUnescape() {
 		assertEquals("", CsvParser.unescape("\"\""));
 		assertEquals("TXT", CsvParser.unescape("\"TXT\""));
