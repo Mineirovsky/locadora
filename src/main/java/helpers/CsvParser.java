@@ -91,51 +91,41 @@ public class CsvParser<T extends BaseModel> {
 		for (int i = 0; i < csv.length(); i++) {
 			char c = csv.charAt(i);
 
-			if (fieldLength == 0) {
-				if (c == '"') {
-					quoteOpen = true;
+			// Illegal and mismatched quotes
+			if (
+				fieldLength > 0 &&
+				(
+					(quoteOpen && previousWasQuote && c != ',' && c != '"') ||
+					(!quoteOpen && c == '"')
+				)
+			) {
+				throw new IllegalArgumentException("Quote mismatch");
+			}
+
+			// Field end boundary
+			if (
+				c == ',' && (
+					(fieldLength == 0) ||
+					(fieldLength > 0 && (previousWasQuote || !quoteOpen))
+				)
+			) {
+				// End boundary of quoted field
+				if (quoteOpen && previousWasQuote) {
+					quoteOpen = false;
+					previousWasQuote = false;
 				}
+				heads.add(i + 1);
+				fieldLength = 0;
+				continue;
+			}
 
-				// Boundary of empty field
-				if (c == ',') {
-					heads.add(i + 1);
-					fieldLength = 0;
-					continue;
-				}
-			} else {
-				if (quoteOpen) {
-					if (previousWasQuote) {
-						// Field boundary
-						if (c == ',') {
-							quoteOpen = false;
-							previousWasQuote = false;
-							heads.add(i + 1);
-							fieldLength = 0;
-							continue;
-						}
+			// Opening quoted field
+			if (fieldLength > 0 && quoteOpen && c == '"') {
+				previousWasQuote = !previousWasQuote;
+			}
 
-						if (c != '"') {
-							throw new IllegalArgumentException("Quote mismatch");
-						}
-
-						previousWasQuote = false;
-					} else {
-						if (c == '"') {
-							previousWasQuote = true;
-						}
-					}
-				} else {
-					if (c == '"') {
-						throw new IllegalArgumentException("Quote mismatch");
-					}
-
-					// Field boundary
-					if (c == ',') {
-						heads.add(i + 1);
-						fieldLength = 0;
-						continue;
-					}
-				}
+			if (fieldLength == 0 && c == '"') {
+				quoteOpen = true;
 			}
 
 			fieldLength++;
