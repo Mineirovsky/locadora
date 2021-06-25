@@ -62,12 +62,23 @@ class TestCsvParser {
 		assertNotNull(
 			parser.parse("42,1999-12-31,\"John, the terrible\"")
 		);
-
 		assertEquals("42", setCalls.get("id"));
-
 		assertEquals(LocalDate.of(1999, 12, 31), setCalls.get("date"));
-
 		assertEquals("John, the terrible", setCalls.get("name"));
+	}
+
+	@Test
+	void testParseWithMissingColumn() {
+		CsvParser<BaseModel> parser = new CsvParser<BaseModel>(builderMock);
+
+		assertThrows(
+			IllegalArgumentException.class,
+			() -> parser.parse("0,Nice Guy")
+		);
+		assertThrows(
+			IllegalArgumentException.class,
+			() -> parser.parse("0,2000-01-01,Nice Guy,How did I get here?")
+		);
 	}
 
 	@Test
@@ -92,7 +103,6 @@ class TestCsvParser {
 			IllegalArgumentException.class,
 			() -> CsvParser.getLinePartitions("123\"AB\",0,,")
 		);
-
 		assertThrows(
 			IllegalArgumentException.class,
 			() -> CsvParser.getLinePartitions("123,\"AB\"C,0,,")
