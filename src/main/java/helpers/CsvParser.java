@@ -8,6 +8,69 @@ import contracts.models.IModelBuilder;
 import models.BaseModel;
 
 public class CsvParser<T extends BaseModel> {
+	private static class State {
+		boolean quoteOpen = false;
+		boolean previousWasQuote = false;
+		int fieldLength = 0;
+		
+		boolean isIllegalOrMismatchedQuote(char c) {
+			return (
+				fieldLength > 0 &&
+				(
+					(quoteOpen && previousWasQuote && !(c == ',' || c == '"')) ||
+					(!quoteOpen && c == '"')
+				)
+			);
+		}
+		
+		boolean isFieldBoundary(char c) {
+			return (
+				c == ',' && (
+					(fieldLength == 0) ||
+					(fieldLength > 0 && (previousWasQuote || !quoteOpen))
+				)
+			);
+		}
+
+		boolean isQuoteToken(char c) {
+			return fieldLength > 0 && quoteOpen && c == '"';
+		}
+		
+		boolean isOpeningQuote(char c) {
+			return fieldLength == 0 && c == '"';
+		}
+		
+		boolean quotesAreMatching() {
+			return !quoteOpen || previousWasQuote;
+		}
+
+		State next(char c) {
+			if (isIllegalOrMismatchedQuote(c)) {
+				return null;
+			}
+			
+			if (isFieldBoundary(c)) {
+				if (previousWasQuote) {
+					quoteOpen = false;
+					previousWasQuote = false;
+				}
+				fieldLength = 0;
+				return this;
+			}
+			
+			if (isQuoteToken(c)) {
+				previousWasQuote = !previousWasQuote;
+			}
+
+			if (isOpeningQuote(c)) {
+				quoteOpen = true;
+			}
+			
+			fieldLength++;
+			return this;
+		}
+	}
+
 	private IModelBuilder<T> builder;
 
 	public CsvParser(IModelBuilder<T> modelBuilder) {
@@ -82,56 +145,25 @@ public class CsvParser<T extends BaseModel> {
 
 	private static List<Integer> getFieldsHead(String csv) {
 		List<Integer> heads = new LinkedList<Integer>();
-		boolean quoteOpen = false;
-		boolean previousWasQuote = false;
-		int fieldLength = 0;
+		State state = new State();
 
 		heads.add(0);
 
 		for (int i = 0; i < csv.length(); i++) {
 			char c = csv.charAt(i);
 
-			// Illegal and mismatched quotes
-			if (
-				fieldLength > 0 &&
-				(
-					(quoteOpen && previousWasQuote && c != ',' && c != '"') ||
-					(!quoteOpen && c == '"')
-				)
-			) {
+			if (state.isIllegalOrMismatchedQuote(c)) {
 				throw new IllegalArgumentException("Quote mismatch");
 			}
 
-			// Field end boundary
-			if (
-				c == ',' && (
-					(fieldLength == 0) ||
-					(fieldLength > 0 && (previousWasQuote || !quoteOpen))
-				)
-			) {
-				// End boundary of quoted field
-				if (quoteOpen && previousWasQuote) {
-					quoteOpen = false;
-					previousWasQuote = false;
-				}
+			if (state.isFieldBoundary(c)) {
 				heads.add(i + 1);
-				fieldLength = 0;
-				continue;
 			}
 
-			// Opening quoted field
-			if (fieldLength > 0 && quoteOpen && c == '"') {
-				previousWasQuote = !previousWasQuote;
-			}
-
-			if (fieldLength == 0 && c == '"') {
-				quoteOpen = true;
-			}
-
-			fieldLength++;
+			state.next(c);
 		}
 
-		if (quoteOpen && !previousWasQuote) {
+		if (!state.quotesAreMatching()) {
 			throw new IllegalArgumentException("Quote mismatch");
 		}
 
