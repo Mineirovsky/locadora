@@ -115,6 +115,10 @@ class TestCsvParser {
 			IllegalArgumentException.class,
 			() -> CsvParser.getLinePartitions("123,\"AB\"C,0,,")
 		);
+		assertThrows(
+				IllegalArgumentException.class,
+				() -> CsvParser.getLinePartitions("\"\"invalid\"")
+			);
 	}
 
 	@Test
