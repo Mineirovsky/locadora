@@ -12,7 +12,7 @@ public class CsvParser<T extends BaseModel> {
 		boolean quoteOpen = false;
 		boolean previousWasQuote = false;
 		int fieldLength = 0;
-		
+
 		boolean isIllegalOrMismatchedQuote(char c) {
 			return (
 				fieldLength > 0 &&
@@ -22,7 +22,7 @@ public class CsvParser<T extends BaseModel> {
 				)
 			);
 		}
-		
+
 		boolean isFieldBoundary(char c) {
 			return (
 				c == ',' && (
@@ -35,11 +35,11 @@ public class CsvParser<T extends BaseModel> {
 		boolean isQuoteToken(char c) {
 			return fieldLength > 0 && quoteOpen && c == '"';
 		}
-		
+
 		boolean isOpeningQuote(char c) {
 			return fieldLength == 0 && c == '"';
 		}
-		
+
 		boolean quotesAreMatching() {
 			return !quoteOpen || previousWasQuote;
 		}
@@ -48,7 +48,7 @@ public class CsvParser<T extends BaseModel> {
 			if (isIllegalOrMismatchedQuote(c)) {
 				return null;
 			}
-			
+
 			if (isFieldBoundary(c)) {
 				if (previousWasQuote) {
 					quoteOpen = false;
@@ -57,7 +57,7 @@ public class CsvParser<T extends BaseModel> {
 				fieldLength = 0;
 				return this;
 			}
-			
+
 			if (isQuoteToken(c)) {
 				previousWasQuote = !previousWasQuote;
 			}
@@ -65,7 +65,7 @@ public class CsvParser<T extends BaseModel> {
 			if (isOpeningQuote(c)) {
 				quoteOpen = true;
 			}
-			
+
 			fieldLength++;
 			return this;
 		}
@@ -98,24 +98,34 @@ public class CsvParser<T extends BaseModel> {
 				String field = fields[i];
 				String readField = unescape(partitions.get(i + 1));
 
-				switch (builder.getFieldType(field)) {
-				case "int":
-					builder.set(field, Integer.parseInt(readField));
-					break;
-				case "java.time.LocalDate":
-					builder.set(field, LocalDate.parse(readField));
-					break;
-				case "java.lang.String":
-				default:
-					builder.set(field, readField);
-					break;
-				}
+				builder.set(field, parseField(field, readField));
 			}
-		} catch (IndexOutOfBoundsException | NoSuchFieldException | IllegalArgumentException | IllegalAccessException e) {
-
+		} catch (IndexOutOfBoundsException | NoSuchFieldException | IllegalAccessException e) {
+			// Something is very wrong
+			System.exit(-1);
 		}
 
 		return builder.build();
+	}
+
+	/**
+	 * Parse the value into field's type
+	 * @param field Field name
+	 * @param value
+	 * @return
+	 */
+	private Object parseField(String field, String value) {
+		switch (builder.getFieldType(field)) {
+		case "int":
+			return Integer.parseInt(value);
+		case "java.time.LocalDate":
+			return LocalDate.parse(value);
+		case "java.lang.String":
+		default:
+			break;
+		}
+
+		return value;
 	}
 
 	public static List<String> getLinePartitions(String csv) {
