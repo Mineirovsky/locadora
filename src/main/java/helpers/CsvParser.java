@@ -77,7 +77,7 @@ public class CsvParser<T extends BaseModel> {
 		builder = modelBuilder;
 	}
 
-	public T parse(String csv) {
+	public T parseLine(String csv) {
 		String[] fields = builder.getFields();
 		List<String> partitions = getLinePartitions(csv);
 

@@ -56,11 +56,11 @@ class TestCsvParser {
 	}
 
 	@Test
-	void testParse() {
+	void testParseLine() {
 		CsvParser<BaseModel> parser = new CsvParser<BaseModel>(builderMock);
 
 		assertNotNull(
-			parser.parse("42,1999-12-31,\"John, the terrible\"")
+			parser.parseLine("42,1999-12-31,\"John, the terrible\"")
 		);
 		assertEquals("42", setCalls.get("id"));
 		assertEquals(LocalDate.of(1999, 12, 31), setCalls.get("date"));
@@ -68,16 +68,16 @@ class TestCsvParser {
 	}
 
 	@Test
-	void testParseWithMissingColumn() {
+	void testParseLineWithMissingColumn() {
 		CsvParser<BaseModel> parser = new CsvParser<BaseModel>(builderMock);
 
 		assertThrows(
 			IllegalArgumentException.class,
-			() -> parser.parse("0,Nice Guy")
+			() -> parser.parseLine("0,Nice Guy")
 		);
 		assertThrows(
 			IllegalArgumentException.class,
-			() -> parser.parse("0,2000-01-01,Nice Guy,How did I get here?")
+			() -> parser.parseLine("0,2000-01-01,Nice Guy,How did I get here?")
 		);
 	}
 
@@ -89,11 +89,11 @@ class TestCsvParser {
 		assertEquals("\"\"", partitions.get(1));
 		assertEquals("\",\"\",,,\"\"\"", partitions.get(2));
 	}
-	
+
 	@Test
 	void testGetLinePartitionsWithCommaAfterInnerQuotes() {
 		List<String> partitions = CsvParser.getLinePartitions("0,\"abc\"\",de\"");
-		
+
 		assertEquals(2, partitions.size());
 		assertEquals("\"abc\"\",de\"", partitions.get(1));
 	}
