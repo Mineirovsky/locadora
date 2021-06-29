@@ -24,4 +24,18 @@ public abstract class CsvRepository<T extends BaseModel> implements IRepository<
 	protected String getFileName() {
 		return getName() + ".csv";
 	}
+
+	@Override
+	public Collection<T> all() {
+		if (items == null) {
+			try {
+				reload();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				return null;
+			}
+		}
+
+		return new LinkedList<T>(items);
+	}
 }
