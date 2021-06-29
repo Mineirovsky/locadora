@@ -10,11 +10,13 @@ import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import contracts.factories.IModelFactory;
 import contracts.models.IModelBuilder;
 import models.BaseModel;
 
 class TestCsvParser {
 	IModelBuilder<BaseModel> builderMock;
+	IModelFactory<BaseModel> factoryMock;
 	Map<String, Object> setCalls;
 
 	@BeforeEach
@@ -53,11 +55,28 @@ class TestCsvParser {
 			}
 
 		};
+		factoryMock = new IModelFactory<BaseModel>() {
+
+			@Override
+			public BaseModel create() {
+				return new BaseModel() {};
+			}
+
+			@Override
+			public BaseModel create(int id) {
+				return new BaseModel() {};
+			}
+
+			@Override
+			public IModelBuilder<BaseModel> getBuilder() {
+				return builderMock;
+			}
+		};
 	}
 
 	@Test
 	void testParseLine() {
-		CsvParser<BaseModel> parser = new CsvParser<BaseModel>(builderMock);
+		CsvParser<BaseModel> parser = new CsvParser<BaseModel>(factoryMock);
 
 		assertNotNull(
 			parser.parseLine("42,1999-12-31,\"John, the terrible\"")
@@ -69,7 +88,7 @@ class TestCsvParser {
 
 	@Test
 	void testParseLineWithMissingColumn() {
-		CsvParser<BaseModel> parser = new CsvParser<BaseModel>(builderMock);
+		CsvParser<BaseModel> parser = new CsvParser<BaseModel>(factoryMock);
 
 		assertThrows(
 			IllegalArgumentException.class,
