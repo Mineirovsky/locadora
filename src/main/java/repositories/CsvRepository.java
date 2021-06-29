@@ -35,12 +35,34 @@ public abstract class CsvRepository<T extends BaseModel> implements IRepository<
 	}
 
 	@Override
+	public T get(int id) {
+		T entity;
+
+		if (items == null) {
+			try {
+				reload();
+			} catch (IOException e) {
+				System.exit(-1);
+			}
+		}
+
+		Iterator<T> it = items.iterator();
+		while (it.hasNext()) {
+			entity = it.next();
+			if (entity.getId() == id) {
+				return entity;
+			}
+		}
+
+		return null;
+	}
+
+	@Override
 	public Collection<T> all() {
 		if (items == null) {
 			try {
 				reload();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				return null;
 			}
 		}
