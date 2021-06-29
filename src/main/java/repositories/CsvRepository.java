@@ -14,6 +14,7 @@ import contracts.factories.IModelFactory;
 import contracts.repositories.IRepository;
 import helpers.CsvParser;
 import models.BaseModel;
+import models.ModelBuilder;
 
 public abstract class CsvRepository<T extends BaseModel> implements IRepository<T> {
 	protected IStorage storage;
@@ -45,6 +46,37 @@ public abstract class CsvRepository<T extends BaseModel> implements IRepository<
 		}
 
 		return new LinkedList<T>(items);
+	}
+
+	@Override
+	public T save(T entity) {
+		ModelBuilder<T> builder;
+		T newEntity;
+
+		// Newly created entity
+		if (entity.getId() == 0) {
+			builder = new ModelBuilder<T>(entity);
+
+			try {
+				builder.set("id", getNewId());
+				newEntity = builder.build();
+				items.add(newEntity);
+				return newEntity;
+			} catch (NoSuchFieldException | IllegalArgumentException | IllegalAccessException e) {
+				System.exit(-1);
+			}
+		}
+
+		T found = get(entity.getId());
+
+		if (found == null) {
+			throw new IllegalArgumentException("Trying to update an absent entity");
+		}
+
+		items.remove(found);
+		items.add(entity);
+
+		return entity;
 	}
 
 	public CsvRepository<T> reload() throws IOException {
