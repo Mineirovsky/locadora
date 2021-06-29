@@ -50,6 +50,10 @@ public abstract class CsvRepository<T extends BaseModel> implements IRepository<
 		return this;
 	}
 
+	protected T readLine(Scanner scanner) {
+		return parser.parseLine(scanner.nextLine());
+	}
+
 	protected Scanner getScanner() throws IOException {
 		File file = storage.file(getFileName());
 
