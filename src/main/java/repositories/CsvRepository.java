@@ -3,6 +3,7 @@ package repositories;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Scanner;
 import java.util.SortedSet;
@@ -73,5 +74,17 @@ public abstract class CsvRepository<T extends BaseModel> implements IRepository<
 	protected CsvRepository<T> store() throws IOException {
 		storage.saveContents(getFileName(), serializeItems());
 		return this;
+	}
+
+	private String serializeItems() {
+		StringBuilder stringBuilder = new StringBuilder();
+		Iterator<T> it = items.iterator();
+
+		while (it.hasNext()) {
+			stringBuilder.append(it.next().toCsv());
+			stringBuilder.append("\n");
+		}
+
+		return stringBuilder.toString();
 	}
 }
