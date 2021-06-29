@@ -10,6 +10,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import contracts.drivers.IStorage;
+import contracts.factories.IModelFactory;
+import contracts.models.IModelBuilder;
+import helpers.CsvParser;
 import models.BaseModel;
 
 class TestCsvRepository {
@@ -20,19 +23,18 @@ class TestCsvRepository {
 	@BeforeEach
 	void setUp() throws Exception {
 		IStorage storageMock = new IStorage() {
-			
 			@Override
 			public boolean saveContents(String fileName, String contents) throws IOException {
 				// TODO Auto-generated method stub
 				return false;
 			}
-			
+
 			@Override
 			public File file(String fileName) {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+
 			@Override
 			public boolean append(String fileName, String contents) throws IOException {
 				// TODO Auto-generated method stub
@@ -40,7 +42,26 @@ class TestCsvRepository {
 			}
 		};
 
-		repositoryMock = new CsvRepository<Model>(storageMock) {
+		IModelFactory<Model> factoryMock = new IModelFactory<Model>() {
+			@Override
+			public Model create() {
+				return new Model();
+			}
+
+			@Override
+			public Model create(int id) {
+				return new Model();
+			}
+
+			@Override
+			public IModelBuilder<Model> getBuilder() {
+				return null;
+			}
+		};
+
+		CsvParser<Model> parserMock = new CsvParser<Model>(factoryMock);
+
+		repositoryMock = new CsvRepository<Model>(storageMock, factoryMock, parserMock) {
 			@Override
 			public Collection<Model> all() {
 				// TODO Auto-generated method stub
