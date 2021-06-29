@@ -123,6 +123,7 @@ public abstract class CsvRepository<T extends BaseModel> implements IRepository<
 			items.add(readLine(scanner));
 		}
 
+		scanner.close();
 		return this;
 	}
 
