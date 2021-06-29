@@ -5,10 +5,10 @@ import models.BaseModel;
 import models.ModelBuilder;
 
 public abstract class ModelFactory<T extends BaseModel> implements IModelFactory<T> {
-	protected ModelBuilder<T> getBuilder() {
+	public ModelBuilder<T> getBuilder() {
 		return new ModelBuilder<T>(create());
 	}
-	
+
 	@Override
 	public T create(int id) {
 		ModelBuilder<T> builder = getBuilder();
@@ -18,7 +18,7 @@ public abstract class ModelFactory<T extends BaseModel> implements IModelFactory
 		} catch (NoSuchFieldException | IllegalArgumentException | IllegalAccessException e) {
 			// No need to handle these exceptions
 		}
-		
+
 		return builder.build();
 	}
 }
