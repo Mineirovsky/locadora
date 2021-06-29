@@ -38,4 +38,15 @@ public abstract class CsvRepository<T extends BaseModel> implements IRepository<
 
 		return new LinkedList<T>(items);
 	}
+
+	public CsvRepository<T> reload() throws IOException {
+		Scanner scanner = getScanner();
+		items = new TreeSet<T>();
+
+		while(scanner.hasNextLine()) {
+			items.add(readLine(scanner));
+		}
+
+		return this;
+	}
 }
