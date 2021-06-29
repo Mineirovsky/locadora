@@ -69,4 +69,9 @@ public abstract class CsvRepository<T extends BaseModel> implements IRepository<
 		}
 		return new Scanner(file);
 	}
+
+	protected CsvRepository<T> store() throws IOException {
+		storage.saveContents(getFileName(), serializeItems());
+		return this;
+	}
 }
