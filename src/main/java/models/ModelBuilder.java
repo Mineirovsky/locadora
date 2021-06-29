@@ -17,6 +17,7 @@ public class ModelBuilder<T extends BaseModel> implements IModelBuilder<T> {
 	{
 		if (fieldName.equals("id")) {
 			model.setId(Integer.parseInt(value.toString()));
+			return this;
 		}
 
 		Field field = findField(fieldName);
