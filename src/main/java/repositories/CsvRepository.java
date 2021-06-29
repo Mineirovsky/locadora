@@ -135,8 +135,12 @@ public abstract class CsvRepository<T extends BaseModel> implements IRepository<
 		File file = storage.file(getFileName());
 
 		if (!file.exists()) {
+			if (!file.getParentFile().exists()) {
+				file.getParentFile().mkdir();
+			}
 			file.createNewFile();
 		}
+
 		return new Scanner(file);
 	}
 
