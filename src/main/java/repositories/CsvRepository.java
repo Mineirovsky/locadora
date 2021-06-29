@@ -49,4 +49,13 @@ public abstract class CsvRepository<T extends BaseModel> implements IRepository<
 
 		return this;
 	}
+
+	protected Scanner getScanner() throws IOException {
+		File file = storage.file(getFileName());
+
+		if (!file.exists()) {
+			file.createNewFile();
+		}
+		return new Scanner(file);
+	}
 }
