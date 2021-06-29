@@ -53,6 +53,11 @@ public abstract class CsvRepository<T extends BaseModel> implements IRepository<
 		ModelBuilder<T> builder;
 		T newEntity;
 
+		// Make sure the repository is loaded
+		if (all() == null) {
+			System.exit(-1);
+		}
+
 		// Newly created entity
 		if (entity.getId() == 0) {
 			builder = new ModelBuilder<T>(entity);
