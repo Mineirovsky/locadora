@@ -4,9 +4,16 @@ import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
 
+import contracts.factories.IModelFactory;
 import contracts.models.IModelBuilder;
 import models.BaseModel;
 
+/**
+ * 
+ * @author Gabriel Mineiro <gabrielpfgmineiro@gmail.com>
+ *
+ * @param <T> Model to parse into
+ */
 public class CsvParser<T extends BaseModel> {
 	private static class State {
 		boolean quoteOpen = false;
@@ -71,13 +78,14 @@ public class CsvParser<T extends BaseModel> {
 		}
 	}
 
-	private IModelBuilder<T> builder;
+	private IModelFactory<T> factory;
 
-	public CsvParser(IModelBuilder<T> modelBuilder) {
-		builder = modelBuilder;
+	public CsvParser(IModelFactory<T> modelFactory) {
+		factory = modelFactory;
 	}
 
 	public T parseLine(String csv) {
+		IModelBuilder<T> builder = factory.getBuilder();
 		String[] fields = builder.getFields();
 		List<String> partitions = getLinePartitions(csv);
 
@@ -115,7 +123,7 @@ public class CsvParser<T extends BaseModel> {
 	 * @return
 	 */
 	private Object parseField(String field, String value) {
-		switch (builder.getFieldType(field)) {
+		switch (factory.getBuilder().getFieldType(field)) {
 		case "int":
 			return Integer.parseInt(value);
 		case "java.time.LocalDate":
