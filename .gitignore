@@ -2,6 +2,9 @@
 log/
 target/
 
+# VSCode
+.vscode
+
 # Eclipse
 .classpath
 .project
