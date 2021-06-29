@@ -119,4 +119,11 @@ public abstract class CsvRepository<T extends BaseModel> implements IRepository<
 
 		return stringBuilder.toString();
 	}
+
+	private int getNewId() {
+		if (items.size() == 0) {
+			return 1;
+		}
+		return items.last().getId() + 1;
+	}
 }
