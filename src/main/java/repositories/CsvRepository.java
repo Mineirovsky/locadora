@@ -106,6 +106,15 @@ public abstract class CsvRepository<T extends BaseModel> implements IRepository<
 		return entity;
 	}
 
+	@Override
+	public T delete(T entity) {
+		if (!items.removeIf(e -> e == entity)) {
+			return null;
+		}
+
+		return entity;
+	}
+
 	public CsvRepository<T> reload() throws IOException {
 		Scanner scanner = getScanner();
 		items = new TreeSet<T>();
